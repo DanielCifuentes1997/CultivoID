@@ -1,5 +1,3 @@
-// Archivo: lib/src/screens/emergency_scan_screen.dart
-
 import 'dart:async';
 import 'package:camera/camera.dart';
 import '../models/recognized_person.dart';
@@ -134,7 +132,7 @@ class _EmergencyScanScreenState extends State<EmergencyScanScreen> with WidgetsB
           final data = preprocessTo112Rgb(cropped);
           final embedding = ServiceLocator.embedder.runEmbedding(data);
 
-          final match = await ServiceLocator.recognition.identify(embedding, threshold: 0.80);
+          final match = await ServiceLocator.recognition.identify(embedding);
 
           if (match != null && match.id != _lastDetectedId && mounted) {
             _lastDetectedId = match.id;

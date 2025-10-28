@@ -42,7 +42,7 @@ flutter:
   uses-material-design: true
   assets:
     # <<< CAMBIO: Usar el nuevo modelo >>>
-    - assets/models/mobilefacenet_112x112_128d.tflite
+    - assets/models/mobilenet_arcface_optimized.tflite
     - assets/images/
     - assets/images/CultivoID.png # O logo_dataface.png si ese es el que usas en SplashScreen
     - assets/images/logo_sioma.png

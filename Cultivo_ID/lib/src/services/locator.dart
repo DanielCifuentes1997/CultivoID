@@ -27,35 +27,68 @@ class ServiceLocator {
 
     _faceDetectorService ??= FaceDetectorService();
     _embeddingService ??= EmbeddingService();
-
     _authService ??= AuthService();
 
-    _recognitionService ??= RecognitionService(_prefs!, _dbKey!);
-    await _recognitionService!.init();
+    // Inicializar RecognitionService (con try-catch por seguridad)
+    try {
+      _recognitionService ??= RecognitionService(_prefs!, _dbKey!);
+      print("ServiceLocator: Intentando inicializar RecognitionService...");
+      await _recognitionService!.init();
+      print("ServiceLocator: RecognitionService inicializado correctamente.");
+    } catch (e, s) {
+      print("ServiceLocator: !!!!!!!!!! ERROR GRAVE AL INICIALIZAR RecognitionService !!!!!!!!!!");
+      print("Error: $e");
+      print("Stack trace: $s");
+    }
 
-    _attendanceService ??= AttendanceService(_prefs!);
-    await _attendanceService!.init();
+    // Inicializar otros servicios (con try-catch por seguridad)
+    try {
+      _attendanceService ??= AttendanceService(_prefs!);
+      await _attendanceService!.init();
+    } catch (e, s) {
+       print("ServiceLocator: !!!!!!!!!! ERROR GRAVE AL INICIALIZAR AttendanceService !!!!!!!!!!");
+       print("Error: $e");
+       print("Stack trace: $s");
+    }
 
-    _syncService ??= SyncService();
-    await _syncService!.init();
+    try {
+      _syncService ??= SyncService();
+      await _syncService!.init();
+    } catch (e, s) {
+      print("ServiceLocator: !!!!!!!!!! ERROR GRAVE AL INICIALIZAR SyncService !!!!!!!!!!");
+      print("Error: $e");
+      print("Stack trace: $s");
+    }
 
-    // Carga del modelo TFLite (sin cambios)
+
+    // <<< CAMBIO PRINCIPAL: Carga del NUEVO modelo TFLite >>>
+    // Aseguramos que la carga del modelo TFLite vaya al final.
     if (!(_embeddingService?.isLoaded ?? false)) {
       final String? path = _prefs!.getString('custom_model_path');
       if (path != null && path.isNotEmpty) {
+        print("ServiceLocator: Intentando cargar modelo TFLite personalizado desde: $path");
         await _embeddingService!.loadModelFromFile(path);
       }
     }
+
+    // Intentar cargar el nuevo modelo ArcFace desde assets si no se cargó uno custom
     if (!(_embeddingService?.isLoaded ?? false)) {
-      await _embeddingService!.loadModelFromAsset('assets/models/mobilefacenet_112x112_128d.tflite');
+      // <<< ESTA ES LA LÍNEA CLAVE ACTUALIZADA >>>
+      const String modelAssetPath = 'assets/models/mobilenet_arcface_optimized.tflite';
+      print("ServiceLocator: Intentando cargar modelo TFLite desde assets: $modelAssetPath");
+      await _embeddingService!.loadModelFromAsset(modelAssetPath);
     }
+
+    // Comprobar si el modelo (el nuevo) se cargó correctamente
     if (!(_embeddingService?.isLoaded ?? false)) {
-      await _embeddingService!.loadModelFromAsset('assets/models/mobilefacenet.tflite');
+        print("ServiceLocator: !!!!!!!!! ERROR CRÍTICO !!!!!!!!!");
+        print("El modelo TFLite ('mobilenet_arcface_optimized.tflite') no pudo ser cargado.");
+        print("Último error registrado: ${_embeddingService?.lastError}");
+        print("Asegúrate de que el archivo existe en 'assets/models/' y está declarado en pubspec.yaml.");
+    } else {
+       print("ServiceLocator: Modelo TFLite cargado exitosamente.");
     }
-    if (!(_embeddingService?.isLoaded ?? false)) {
-        print("ServiceLocator: ERROR CRÍTICO: El modelo TFLite no pudo ser cargado. Error: ${_embeddingService?.lastError}");
-    }
-  }
+  } // Fin de init()
 
   static Future<void> setCustomModelPath(String? path) async {
     if (path == null || path.isEmpty) {
@@ -68,9 +101,19 @@ class ServiceLocator {
   static SharedPreferences get prefs => _prefs!;
   static FaceDetectorService get faceDetector => _faceDetectorService!;
   static EmbeddingService get embedder => _embeddingService!;
-  static RecognitionService get recognition => _recognitionService!;
-  static AttendanceService get attendance => _attendanceService!;
-  static SyncService get sync => _syncService!;
+  // Getters con comprobación de nulidad
+  static RecognitionService get recognition {
+    if (_recognitionService == null) throw StateError("RecognitionService no fue inicializado correctamente.");
+    return _recognitionService!;
+  }
+  static AttendanceService get attendance {
+     if (_attendanceService == null) throw StateError("AttendanceService no fue inicializado correctamente.");
+    return _attendanceService!;
+  }
+  static SyncService get sync {
+     if (_syncService == null) throw StateError("SyncService no fue inicializado correctamente.");
+    return _syncService!;
+  }
   static String get dbKey => _dbKey!;
   static AuthService get auth => _authService!;
 }

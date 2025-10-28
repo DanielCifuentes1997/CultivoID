@@ -186,7 +186,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
             // print('HomeScreen: Intentando identificar. Cache tiene: ${ServiceLocator.recognition.cacheStatus}');
 
-            final match = await ServiceLocator.recognition.identify(embedding, threshold: 0.85);
+            final match = await ServiceLocator.recognition.identify(embedding);
 
             if (match != null) {
               // Si el ID detectado es diferente al último, necesitamos setState
@@ -259,7 +259,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       if (id == null && _lastEmbedding != null) {
         try {
           print('HomeScreen: _registerAttendance - Re-intentando identificar con último embedding...');
-          final match = await ServiceLocator.recognition.identify(_lastEmbedding!, threshold: 1.20);
+          final match = await ServiceLocator.recognition.identify(_lastEmbedding!);
           if (match != null) {
             id = match.id;
             _lastDetectedId = match.id;
