@@ -1,0 +1,57 @@
+name: CultivoID # <<< NOMBRE ACTUALIZADO >>>
+description: Aplicación Flutter de asistencia con reconocimiento facial offline. # <<< DESCRIPCIÓN ACTUALIZADA >>>
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '^3.9.0' # Considera actualizar a una versión más reciente de Dart si es posible
+
+dependencies:
+  flutter:
+    sdk: flutter
+  camera: ^0.10.5+9 # Hay versiones más nuevas, considera actualizar
+  google_mlkit_face_detection: ^0.11.1 # Hay versiones más nuevas
+  google_mlkit_commons: ^0.8.1 # Hay versiones más nuevas
+  tflite_flutter: ^0.11.0 # Hay versiones más nuevas
+  image: ^4.2.0
+  path_provider: ^2.1.2
+  path: ^1.9.0
+
+  # === Base de datos cifrada ===
+  sqflite_sqlcipher: ^3.4.0
+
+  shared_preferences: ^2.2.2
+  permission_handler: ^11.1.0 # Hay versiones más nuevas
+  file_picker: ^8.1.4 # Hay versiones más nuevas
+  collection: ^1.18.0
+  intl: ^0.19.0
+  http: ^1.2.1
+  connectivity_plus: ^6.0.3 # Hay versiones más nuevas
+  flutter_secure_storage: ^9.2.4
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0 # Hay versiones más nuevas
+
+  # <<< AÑADIDO: Paquete para generar iconos >>>
+  flutter_launcher_icons: "^0.13.1" # O la versión más reciente
+
+flutter:
+  uses-material-design: true
+  assets:
+    # <<< CAMBIO: Usar el nuevo modelo >>>
+    - assets/models/mobilefacenet_112x112_128d.tflite
+    - assets/images/
+    - assets/images/CultivoID.png # O logo_dataface.png si ese es el que usas en SplashScreen
+    - assets/images/logo_sioma.png
+
+# Configuración para flutter_launcher_icons
+flutter_icons:
+  android: "launcher_icon" # Nombre base para los iconos de Android (generará ic_launcher.png)
+  ios: true                # Generar también para iOS (puedes poner false si no lo necesitas)
+  # IMPORTANTE: Pon aquí la ruta a tu logo CUADRADO y de ALTA RESOLUCIÓN (ej. 1024x1024) >>>
+  image_path: "assets/images/logoCultivoID_1024.png" # CAMBIA ESTO por la ruta a tu mejor logo
+  min_sdk_android: 21        # Tu minSdk de Android
+  remove_alpha_ios: true    
