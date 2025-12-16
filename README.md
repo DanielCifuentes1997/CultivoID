@@ -1,73 +1,70 @@
-# CultivoID
+CultivoID: Asistencia Biométrica Facial Offline
+CultivoID es una solución de vanguardia diseñada para el registro de asistencia mediante biometría facial, optimizada para operar en entornos con conectividad a internet limitada o nula, como la agroindustria o zonas rurales. Este proyecto fue desarrollado como respuesta al reto "Identidad del Campo" de SIOMA, ofreciendo una alternativa robusta y segura a los métodos tradicionales de registro.
 
-## Asistencia Biométrica Facial Offline para Entornos Agrícolas
+Características Principales
+Reconocimiento Facial sin Conexión: Utiliza un modelo de ejecución en dispositivo (edge computing), lo que permite la identificación de trabajadores en tiempo real sin depender de una conexión a la nube.
 
-!Logo(assets/images/logo_cultivoid.png)
-**CultivoID** es una solución de vanguardia desarrollada para el registro de asistencia biométrica facial, diseñada específicamente para operar en entornos con conectividad a internet limitada o nula, como la agroindustria o zonas rurales. Este proyecto fue desarrollado como respuesta al reto "Identidad del Campo" de SIOMA, ofreciendo una alternativa robusta y segura a los métodos tradicionales de registro.
+Base de Datos Local Cifrada: Los registros de asistencia y la información sensible de los empleados se almacenan en una base de datos SQLite local, cifrada con SQLCipher (AES de 256 bits), garantizando la máxima seguridad y privacidad.
 
-## Características Principales
+Sincronización Inteligente: Monitorea el estado de la red. Al detectar conectividad, sincroniza automáticamente los registros pendientes con un servidor externo, asegurando la integridad y actualización de los datos.
 
-* **Reconocimiento Facial Offline:** Utiliza un modelo de Machine Learning (MobileFaceNet TFLite) ejecutado directamente en el dispositivo (edge computing), permitiendo la identificación de trabajadores sin necesidad de conexión a la nube.
-* **Base de Datos Local Cifrada:** Todos los registros de asistencia y los datos sensibles de los empleados se almacenan en una base de datos SQLite local, cifrada con SQLCipher (AES de 256 bits). Esto garantiza la seguridad y privacidad de la información.
-* **Sincronización Inteligente:** Monitorea activamente la conectividad de red. Cuando se detecta una conexión, sincroniza automáticamente los registros pendientes con un servidor externo (API simulada en este proyecto), asegurando que ningún dato se pierda y manteniendo la información actualizada.
-* **Gestión de Empleados y Áreas:**
-    * Registro de nuevos trabajadores mediante captura facial en múltiples poses.
-    * Asignación y creación de "Áreas de Trabajo" para organizar al personal.
-    * Edición y eliminación de perfiles de empleados.
-    * Visualización de empleados agrupados por área.
-* **Acceso Seguro a Configuración:** Un PIN de seguridad protege el acceso a las funciones administrativas de la aplicación.
-* **Escaneo de Emergencia (Valor Añadido):** Una función innovadora que permite identificar rápidamente a un trabajador mediante la cámara trasera para acceder a datos médicos vitales (tipo de sangre, alergias, contacto de emergencia, EPS), crucial para situaciones de seguridad en entornos de campo.
+Gestión de Personal y Áreas:
 
-## Tecnologías Utilizadas
+Registro de nuevos trabajadores mediante captura facial multi-pose.
 
-* **Flutter:** Framework para el desarrollo multiplataforma (Android).
-* **Dart:** Lenguaje de programación.
-* **TensorFlow Lite:** Para la ejecución del modelo de Machine Learning de reconocimiento facial (MobileFaceNet).
-* **`camera`:** Acceso y control de la cámara del dispositivo.
-* **`sqflite_sqlcipher`:** Base de datos SQLite local con cifrado.
-* **`flutter_secure_storage`:** Almacenamiento seguro de claves de cifrado y PINs.
-* **`connectivity_plus`:** Detección del estado de la conexión a internet.
-* **`http`:** Realización de peticiones HTTP para la sincronización.
-* **`provider` / `get_it` / `ServiceLocator`:** Gestión de estado y localización de servicios (ajusta según tu implementación específica).
+Asignación y creación de "Áreas de Trabajo".
 
-## Arquitectura
+Visualización, edición y eliminación de perfiles de empleados.
 
-La aplicación sigue principios de arquitectura limpia, utilizando inyección de dependencias (a través de un `ServiceLocator`) para desacoplar componentes y facilitar la escalabilidad y el mantenimiento. Los servicios principales (reconocimiento, autenticación, embebber de ML, sincronización) son gestionados centralizadamente.
+Acceso Seguro: Un PIN protege el acceso a las funciones administrativas y de configuración de la aplicación.
 
-## Cómo Ejecutar el Proyecto
+Escaneo de Emergencia (Valor Añadido): Función para identificar rápidamente a un trabajador usando la cámara y acceder a datos médicos vitales (tipo de sangre, alergias, contacto de emergencia), crucial para situaciones de seguridad en entornos de campo.
 
-### Prerrequisitos
+Tecnologías Utilizadas
+Flutter & Dart: Framework y lenguaje base para el desarrollo multiplataforma (Android).
 
-* [Flutter SDK](https://flutter.dev/docs/get-started/install) instalado (Versión 3.x recomendada).
-* Un dispositivo Android o emulador configurado (API nivel 24+ recomendado).
+TensorFlow Lite: Para la ejecución local del modelo de reconocimiento facial.
 
-### Pasos de Configuración
+Almacenamiento y Seguridad: sqflite_sqlcipher (Base de datos cifrada) y flutter_secure_storage (Almacenamiento seguro de claves).
 
-1.  **Clona el Repositorio:**
-    ```bash
-    git clone https://github.com/DanielCifuentes1997/CultivoID.git
-    (https://github.com/TU_USUARIO_DE_GITHUB/NOMBRE_DE_TU_REPOSITORIO.git)
-    cd NOMBRE_DE_TU_REPOSITORIO
+Conectividad: connectivity_plus (Detección de estado de red) y http (Peticiones para sincronización).
 
-2.  **Obtén las Dependencias:**
-    ```bash
-    flutter pub get
-    ```
+Arquitectura: Principios de Arquitectura Limpia, utilizando inyección de dependencias (provider / get_it) para componentes desacoplados.
 
-3.  **Asegura los Assets:**
-    Verifica que el modelo TFLite (`assets/models/mobilefacenet_112x112_128d.tflite`) y los logos (`assets/images/logo_dataface.png`, `assets/images/logo_sioma.png`) estén presentes en sus respectivas carpetas y declarados correctamente en `pubspec.yaml`.
+Arquitectura
+La aplicación sigue principios de arquitectura limpia, utilizando inyección de dependencias para desacoplar componentes, lo que facilita la escalabilidad y el mantenimiento. Los servicios principales (reconocimiento, autenticación, sincronización, gestión de datos) son gestionados centralizadamente.
 
-4.  **Ejecuta la Aplicación:**
-    ```bash
-    flutter run
-    ```
+Cómo Ejecutar el Proyecto
+Prerrequisitos
+Flutter SDK instalado (Versión 3.x recomendada).
 
-### Consideraciones de Seguridad
+Un dispositivo Android o emulador configurado (API nivel 24+ recomendado).
 
-* La base de datos cifrada y las claves se gestionan para máxima seguridad en el dispositivo.
-* El PIN de acceso a la configuración se almacena de forma segura.
-* El modelo ML se ejecuta localmente, sin enviar datos biométricos a la nube para la identificación.
+Pasos de Configuración
+Clona el Repositorio:
 
-## Contribuciones
+Bash
 
-Este proyecto se desarrolló en el marco de la Hackathon Data Synergy. Las contribuciones futuras son bienvenidas. Si tienes sugerencias o mejoras, no dudes en abrir un *issue* o enviar un *pull request*.
+git clone https://aws.amazon.com/es/what-is/repo/
+cd CultivoID
+Obtén las Dependencias:
+
+Bash
+
+flutter pub get
+Asegura los Assets: Verifica que el modelo TFLite (assets/models/...) y otros archivos necesarios estén presentes en sus respectivas carpetas y declarados correctamente en pubspec.yaml.
+
+Ejecuta la Aplicación:
+
+Bash
+
+flutter run
+Consideraciones de Seguridad
+La base de datos cifrada y sus claves se gestionan para máxima seguridad en el dispositivo.
+
+El PIN de acceso a la configuración se almacena de forma segura.
+
+El modelo de reconocimiento se ejecuta localmente, sin enviar datos biométricos a la nube para la identificación.
+
+Contribuciones
+Este proyecto se desarrolló en el marco de la Hackathon Data Synergy. Si tienes sugerencias o mejoras, eres bienvenido a abrir un issue o enviar un pull request.
